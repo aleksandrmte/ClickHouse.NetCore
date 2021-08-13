@@ -60,7 +60,7 @@ namespace ClickHouse.NetCore
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="tableName">Table name</param>
         /// <param name="bulk">Data to insert</param>
-        Task BulkInsert<T>(string tableName, List<T> bulk);
+        Task<long> BulkInsert<T>(string tableName, List<T> bulk);
 
         /// <summary>
         /// Create a new table
@@ -73,10 +73,8 @@ namespace ClickHouse.NetCore
         /// Execute a query that maps its result to object collection
         /// </summary>
         /// <typeparam name="T">object type</typeparam>
-        /// <param name="commandText">query text</param>
-        /// <param name="parameters">list of parameters</param>
-        /// <param name="convention">column naming convention</param>
+        /// <param name="query">query text</param>
         /// <returns></returns>
-        Task<IEnumerable<T>> ExecuteQueryMapping<T>(string commandText, IColumnNamingConvention convention = null) where T : new();
+        Task<IEnumerable<T>> ExecuteQueryMapping<T>(string query) where T : new();
     }
 }

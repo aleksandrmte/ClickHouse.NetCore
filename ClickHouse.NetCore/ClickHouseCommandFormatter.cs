@@ -17,7 +17,7 @@ namespace ClickHouse.NetCore
         }
 
         public string CreateTable(string database, Table table, CreateOptions options = null)
-        {           
+        {
             return Create("TABLE", Table(database, table), options);
         }
 
@@ -25,7 +25,7 @@ namespace ClickHouse.NetCore
         {
             return Drop("TABLE", name, options);
         }
-        
+
         public string CreateDatabase(string databaseName, CreateOptions options = null)
         {
             return Create("DATABASE", databaseName, options);
@@ -50,7 +50,7 @@ namespace ClickHouse.NetCore
         {
             return string.IsNullOrWhiteSpace(table.Select) ? string.Empty : $" AS {table.Select}";
         }
-        
+
         private static string Columns(IEnumerable<Column> columns)
         {
             return $"({string.Join(", ", columns)})";
@@ -78,11 +78,12 @@ namespace ClickHouse.NetCore
             return ifExists ? " IF EXISTS" : "";
         }
 
-        public List<object[]> BulkInsert<T>(IEnumerable<T> bulk)
+        public (List<object[]>, List<string> columns) BulkInsert<T>(IEnumerable<T> bulk)
         {
             var fields = typeof(T).GetProperties();
+            var columns = Enumerable.Range(0, fields.Length).Select(i => fields[i].Name).ToList();
             var items = bulk.Select(x => Enumerable.Range(0, fields.Length).Select(i => x.GetType().GetProperty(fields[i].Name)?.GetValue(x, null)).ToArray()).ToList();
-            return items;
+            return (items, columns);
         }
     }
 }

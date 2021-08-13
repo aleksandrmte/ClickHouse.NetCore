@@ -25,7 +25,7 @@ namespace ClickHouse.NetCore
         /// </summary>
         /// <param name="bulk"></param>
         /// <returns></returns>
-        List<object[]> BulkInsert<T>(IEnumerable<T> bulk);
+        (List<object[]>, List<string> columns) BulkInsert<T>(IEnumerable<T> bulk);
 
         /// <summary>
         /// Compose a query that creates a table
